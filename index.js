@@ -1,0 +1,1 @@
+export { default as UncleArgonDashboard } from './src/plugin';

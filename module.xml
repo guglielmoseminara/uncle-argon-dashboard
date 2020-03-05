@@ -1,0 +1,125 @@
+<module name="dashboard">
+    <api>
+        <resources>
+            <resource name="auth">
+                <routes>
+                    <route name="login" method="post" url="/auth/login" />
+                    <route name="logout" method="post" url="/auth/logout" />
+                    <route name="recoveryPassword" method="post" url="/auth/recovery" />
+                    <route name="resetPassword" method="post" url="/auth/reset" />
+                </routes>
+            </resource>
+        </resources>
+    </api>
+    <app>
+        <routes>
+            <route name="login" url="/login" view="Login" />
+            <route name="passwordRecovery" url="/password-recovery" view="PasswordRecovery" />
+            <route name="passwordReset" url="/password-reset" view="PasswordReset" />
+            <route name="scheleton" view="Scheleton" url="/" action="userServiceRestrictDashboard" />
+        </routes>
+        <views>
+            <view name="Login"/>
+            <view name="PasswordRecovery" />
+            <view name="PasswordReset" />
+            <view name="Scheleton" />
+        </views>
+        <navs>
+            <nav name="sidebar">
+            </nav>
+            <append tag="nav" name="sidebar" position="end">
+                <nav-item name="logout" icon="logout" action="logout">Logout</nav-item>
+            </append>
+        </navs>
+        <forms>
+            <form name="login" action="login">
+                <fields>
+                    <field name="email" placeholder="Email" icon="mail" type="text" validator="required" text="email" disable-label="true"/>
+                    <field name="password" placeholder="Password" icon="lock" type="password" text="password" validator="required" disable-label="true"/>
+                </fields>
+            </form>
+            <form name="recoveryPassword" action="recoveryPassword">
+                <fields>
+                    <field name="email" placeholder="Email" icon="mail" type="text" validator="required|email" text="email" disable-label="true">
+                    </field>
+                </fields>
+            </form>
+            <form name="resetPassword" action="resetPassword">
+                <fields>
+                    <field name="token" type="hidden" bind="$route.query.token" />
+                    <field name="email" placeholder="Email" icon="mail" type="text" validator="required|email" text="email" disable-label="true"/>
+                    <field name="password" placeholder="Password" icon="lock" type="password" validator="required" text="password" disable-label="true"/>
+                    <field name="password_confirmation" placeholder="{{passwordConfirm}}" icon="lock" type="password" validator="required|min:8|equal:resetPassword_password,password" text="{{passwordConfirm}}" disable-label="true"/>
+                </fields>
+            </form>
+        </forms>
+        <actions>
+            <action type="notify" state="error" name="notifyLoginError" text="{{loginFailed}}" />
+            <action type="notify" name="notifyRecoverySuccess" state="success" text="{{recoverySuccess}}" />
+            <action type="notify" name="notifyRecoveryError" state="error" text="{{recoveryError}}" />
+            <action type="notify" name="notifyResetSuccess" state="success" text="{{resetSuccess}}" />
+            <action type="notify" name="notifyResetError" state="error" text="{{resetError}}" />
+            <action type="notify" state="error" name="notifyLogoutError" text="{{logoutError}}" />
+            <action type="nav" name="enterDashboard" route="scheleton" />
+            <action type="nav" name="goToLogin" route="login" />
+            <action type="nav" name="goToRecovery" route="passwordRecovery" />
+            <action type="service" name="userServiceLogin" service="UncleUserService" method="login" after="enterDashboard"/>
+            <action type="service" name="userServiceLogout" service="UncleUserService" method="logout" after="goToLogin"/>
+            <action type="sdk" name="login" method="login">
+                <case when="code == 200" action="userServiceLogin" />
+                <case when="code != 200" action="notifyLoginError" />
+            </action>
+            <action type="sdk" name="recoveryPassword" method="recoveryPassword">
+                <case when="code == 200" action="notifyRecoverySuccess" />
+                <case when="code != 200" action="notifyRecoveryError" />
+            </action>
+            <action type="sdk" name="resetPassword" method="resetPassword">
+                <case when="code == 200" action="resetPasswordSuccessChain" />
+                <case when="code != 200" action="notifyResetError" />
+            </action>
+            <action type="sdk" name="logout" method="logout">
+                <params>
+                    <param name="token" bind="serviceManager.cookie.object.user.token"/>
+                </params>
+                <case when="code == 200" action="userServiceLogout" />
+                <case when="code != 200" action="notifyLogoutError" />
+            </action>
+            <action type="chain" name="resetPasswordSuccessChain">
+                <action name="notifyResetSuccess" />
+                <action name="goToLogin" />
+            </action>
+            <action type="notify" state="success" name="notifyUpdateSuccess" text="{{updateSuccess}}" />
+            <action type="notify" state="error" name="notifyUpdateError" text="{{updateError}}" />
+            <action type="notify" state="success" name="notifyInsertSuccess" text="{{insertSuccess}}"/>
+            <action type="notify" state="error" name="notifyInsertError" text="{{insertError}}" />
+            <action type="notify" state="success" name="notifyDeleteSuccess" text="{{deleteSuccess}}"/>
+            <action type="notify" state="error" name="notifyDeleteError" text="{{deleteFailed}}" />
+            <action type="notify" state="error" name="notifyEmptySelection" text="{{emptySelection}}" />
+            <action type="event" name="resetFormEvent:{name}" />
+            <action type="event" name="refreshListEvent"/>
+            <action type="service" name="userServiceRestrictDashboard" service="UncleUserService" method="restrictDashboard" />
+            <action type="chain" name="storeListSuccessChain">
+                <action name="refreshListEvent"/>
+                <action name="notifyInsertSuccess"/>
+            </action>
+            <action type="chain" name="updateListSuccessChain">
+                <action name="refreshListEvent"/>
+                <action name="notifyUpdateSuccess"/>                
+            </action>
+            <action type="chain" name="deleteManyListSuccessChain">
+                <action name="refreshListEvent"/>
+                <action name="notifyDeleteSuccess"/>
+            </action>
+            <action type="chain" name="deleteListSuccessChain">
+                <action name="refreshListEvent"/>
+                <action name="notifyDeleteSuccess"/>
+            </action>
+        </actions>
+        <sdk>
+            <method name="login" api="main" resource="auth" route="login" />
+            <method name="logout" api="main" resource="auth" route="logout" />
+            <method name="recoveryPassword" api="main" resource="auth" route="recoveryPassword" />
+            <method name="resetPassword" api="main" resource="auth" route="resetPassword" />
+        </sdk>
+    </app>
+</module>
