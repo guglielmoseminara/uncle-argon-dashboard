@@ -1,0 +1,19 @@
+{
+  "name": "uncle-argon-dashboard",
+  "version": "1.0.0",
+  "description": "A dashboard for uncle argon",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guglielmoseminara/uncle-argon-dashboard.git"
+  },
+  "author": "Guglielmo Seminara",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guglielmoseminara/uncle-argon-dashboard/issues"
+  },
+  "homepage": "https://github.com/guglielmoseminara/uncle-argon-dashboard#readme"
+}
