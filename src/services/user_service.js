@@ -26,7 +26,12 @@ export default class UserService {
         const cookieService = app.serviceManager.getCookie();
         const user = cookieService.getCookie("user");
         if (user) {
-            next();
+            if (to.path == '/') {
+                const action = Vue.prototype.$uncle.getAction('enterDashboard');
+                action.execute();
+            } else {
+                next();
+            }
         } else {
             next('/login');
         }
