@@ -36,6 +36,11 @@ export default class UserService {
             next('/login');
         }
     }
+    
+    getUser() {
+        const userCookie = this._getCookieService().getCookie("user");
+        return userCookie && userCookie.user ? userCookie.user : null;
+    }
 
     logout() {
         this._getCookieService().erase("user");

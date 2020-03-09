@@ -2,12 +2,12 @@
     <UncleDashboardOutPage>
         <div class="text-center">
             <slot name="logo"></slot>
-            <p class="auth-text mt-4">Inserisci la nuova password</p>
+            <p class="auth-text mt-4">{{$languageProvider.get('resetTitle')}}</p>
         </div>
         <UncleForm form="resetPassword" ref="form" @input="updateForm($event)"/>
         <div class="mt-3">
             <div style="float:left; padding-top:12px">
-                <a href="#" class="auth-link" @click="goToLogin">Torna al login</a>
+                <a href="#" class="auth-link" @click="goToLogin">{{$languageProvider.get('backToLogin')}}</a>
             </div>
             <UncleButton
                 @click=actionClick 
@@ -15,7 +15,7 @@
                 style="float:right"
                 :loading="loading"
             >
-                Invia
+                {{$languageProvider.get('send')}}
             </UncleButton>
         </div>
     </UncleDashboardOutPage>

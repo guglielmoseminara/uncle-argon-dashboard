@@ -28,7 +28,7 @@
             <nav name="sidebar">
             </nav>
             <append tag="nav" name="sidebar" position="end">
-                <nav-item name="logout" icon="logout" action="logout">Logout</nav-item>
+                <nav-item name="logout" icon="logout" action="logout">{{logout}}</nav-item>
             </append>
         </navs>
         <forms>
