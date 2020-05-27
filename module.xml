@@ -97,6 +97,8 @@
             <action type="notify" state="error" name="notifyEmptySelection" text="{{emptySelection}}" />
             <action type="event" name="resetFormEvent:{name}" />
             <action type="event" name="refreshListEvent"/>
+            <action type="event" name="refreshSummaryEvent:{name}"/>
+            <action type="event" name="closeModalEvent:{name}"/>
             <action type="service" name="userServiceRestrictDashboard" service="UncleUserService" method="restrictDashboard"/>
             <action type="chain" name="storeListSuccessChain">
                 <action name="refreshListEvent"/>
