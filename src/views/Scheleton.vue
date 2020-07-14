@@ -31,7 +31,7 @@
             const userService = app.serviceManager.getService('UncleUserService');
             const user = userService.getUser();
             const profile = user.profile;
-            if (profile) {
+            if (profile && profile.name) {
                 this.initialUser = profile.name.toUpperCase().charAt(0);
             } else {
                 this.initialUser = user.email.toUpperCase().charAt(0);
